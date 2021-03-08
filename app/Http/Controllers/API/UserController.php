@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct() {
+        //$this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,8 +25,8 @@ class UserController extends Controller
      */
     public function index() {
 
-
-
+      //return User::where('type', '=', 'user')->paginate(10);
+      return User::latest()->paginate(10);
     }
 
     /**
@@ -28,16 +37,22 @@ class UserController extends Controller
      */
     public function store(Request $request) {
 
-        return User::create([
+      $this->validate($request, [
+        'name' => 'required|string|max:191',
+        'email' => 'required|string|email|max:191|unique:users',
+        'password' => 'required|string|min:6'
+      ]);
 
-          'name' => $request['name'],
-          'email' => $request['email'],
-          'password' => Hash::make($request['password']),
-          'type' => $request['type'],
-          'bio' => $request['bio'],
-          'photo' => $request['photo'],
+      return User::create([
+        'name' => $request['name'],
+        'email' => $request['email'],
+        'password' => Hash::make($request['password']),
+        'type' => $request['type'],
+        'bio' => $request['bio'],
+        'photo' => $request['photo'],
+      ]);
 
-        ]);
+
     }
 
     /**

@@ -21,14 +21,30 @@
                   <th>ID</th>
                   <th>Name</th>
                   <th>Email</th>
-                  <th>Type</th>
                   <th>Date</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td></td>
+                <tr v-for="alias in seenData.data" :key="alias.id">
+                  <td>{{ alias.id }}</td>
+                  <td>{{ alias.name }}</td>
+                  <td>{{ alias.email }}</td>
+
+                  <td>
+
+                    <!--a href="#" @click="readAndPrintPDF(alias.id)">
+                      <i class="fa fa-file-pdf-o"></i>
+                    </a>
+                    /
+                    <a href="#" @click="forUpdateSharedReusableModalBoxVueMethod(alias)">
+                      <i class="fa fa-edit blue"></i>
+                    </a>
+                    /
+                    <a href="#" @click="deleteUser(alias.id)">
+                      <i class="fa fa-trash red"></i>
+                    </a-->
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -36,7 +52,6 @@
           </div> <!-- card-body table-responsive p-0 -->
 
           <div class="card-footer">
-            1
           </div>
 
 
@@ -145,6 +160,8 @@ export default {
 
   data() {
     return {
+      seenData: {},
+
       userForm: new Spanish({
         id: '',
         name: '',
@@ -161,7 +178,9 @@ export default {
   methods: {
 
 
-
+    loadUserModel(){
+      axios.get("api/user").then(({ data }) => (this.seenData = data))
+    },
 
 
     createUser(){
@@ -190,7 +209,7 @@ export default {
   },
 
   created() {
-
+    this.loadUserModel()
   },
 
   mounted() {
