@@ -4,10 +4,10 @@
   @endpush
   @prepend('frameworkStyles')
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+  <!-- ESM Build -->
 
   <!-- Theme style -->
-  <link rel="stylesheet" href="https://adminlte.io/themes/dev/AdminLTE/dist/css/adminlte.min.css">
+  <!-- ESM Build -->
 
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
@@ -17,13 +17,17 @@
   <script src="{{ mix('js/lib.js') }}"></script>
   @endpush
   @prepend('frameworksScripts')
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--Ajax Google -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <!-- REQUIRED SCRIPTS -->
 
   <!-- jQuery -->
-  <script src="https://adminlte.io/themes/dev/AdminLTE/plugins/jquery/jquery.min.js"></script>
+
   <!-- Bootstrap 4 -->
-  <script src="https://adminlte.io/themes/dev/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
   <!-- AdminLTE App -->
-  <script src="https://adminlte.io/themes/dev/AdminLTE/dist/js/adminlte.min.js"></script>
+  <!--script src="https://adminlte.io/themes/dev/AdminLTE/dist/js/adminlte.min.js"></script-->
   @endprepend
 </x-Master.Author>

@@ -14,16 +14,23 @@
   </ul>
 
   <!-- SEARCH FORM -->
-  <form class="form-inline ml-3">
+
     <div class="input-group input-group-sm">
-      <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+      <input id="search-bar" class="form-control form-control-navbar"
+      type="search" placeholder="Search" aria-label="Search"
+      @keyup="evaKUCLI__InpTS_ButtS_SearchIt"
+      v-model="vmAttr__InpTS_IndexBladeSearch"
+
+      >
       <div class="input-group-append">
-        <button class="btn btn-navbar" type="submit">
+        <button class="btn btn-navbar" type="submit"
+        @click="evaKUCLI__InpTS_ButtS_SearchIt"
+        >
           <i class="fas fa-search"></i>
         </button>
       </div>
     </div>
-  </form>
+
 
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">

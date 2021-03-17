@@ -8,8 +8,12 @@ window._ = require('lodash');
 
 try {
 
-  //window.$ = window.jQuery = require('jquery');
+  window.$ = window.jQuery = require('jquery');
+  //var $ = require( "jquery" );
 
+
+  require('bootstrap');
+  require('admin-lte');
  } catch (e) {}
 
 window.axios = require('axios').default;;

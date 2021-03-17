@@ -1,6 +1,8 @@
 {
     "/js/app.js": "/js/app.js",
     "/js/lib.js": "/js/lib.js",
+    "/js/Vue.js": "/js/Vue.js",
     "/css/app.css": "/css/app.css",
+    "/css/vue-dynamic-mastery.css": "/css/vue-dynamic-mastery.css",
     "/css/custom.css": "/css/custom.css"
 }

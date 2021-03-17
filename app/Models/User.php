@@ -61,4 +61,13 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+
+
+    public function userResumes(){
+      return $this->belongsToMany('App\Models\ResumeData')->withPivot('created_at', 'updated_at');
+    }
+
+
+
 }

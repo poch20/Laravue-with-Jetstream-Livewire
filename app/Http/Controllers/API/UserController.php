@@ -73,11 +73,53 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(Request $request, $id) {
+
+      $updateByUserId = User::findOrFail($id);
+
+      $this->validate($request, [
+        'name' => 'required|string|max:191',
+        'email' => 'required|string|email|max:191|unique:users,email,'.$updateByUserId->id,
+        'password' => 'sometimes|min:6',
+      ]);
+
+      $request['password'] = Hash::make($request['password']);
+      $updateByUserId->update($request->toArray());
+      return response()->json([
+        'status_code' => 200,
+        'message' => 'Registration Successfull',
+      ]);
+
+
     }
 
+    public function updateProfileInfo(Request $request){
+
+    }
+
+    public function createdVueFillProfileForm(Request $request, $http_arg_params){
+
+      $regExAttemptBracket = '/(forBracket){1}/i';
+      $outputValueAttempt1 = preg_replace($regExAttemptBracket, "{" ,$http_arg_params);
+
+      $regExAttemptdQuo = '/(dquo)+/i';
+      $outputValueAttempt2 = preg_replace($regExAttemptdQuo, '"' ,$outputValueAttempt1);
+
+
+      $regExAttemptForSlash = '/kuma+?/i';
+      $outputValueAttempt3 = preg_replace($regExAttemptForSlash, '\/' ,$outputValueAttempt2);
+
+
+      $regExAttemptQM = '/QM+/i';
+      $jsonDataStringObject = preg_replace($regExAttemptQM, '?' ,$outputValueAttempt3);
+      return $jsonDataStringObject;
+
+
+
+
+
+
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -86,6 +128,28 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+      $deleteUserById = User::findOrFail($id);
+      //return ['message' => 'User Deleted'];
+      $deleteUserById->delete();
     }
+
+
+
+    public function searchReturnsForAdmin(){
+      if($search = \Request::get('anyVar')){
+        $usersHasManyForms = User::where(function($queryStrings) use ($search){
+          $queryStrings->where('name','LIKE',"%$search%")
+                ->orWhere('email','LIKE',"%$search%");
+        })->paginate(20);
+      }else{
+        $usersHasManyForms = User::where('type', '=', 'user')->paginate(10);
+      }
+      return $usersHasManyForms;
+    }
+
+
+
+
+
+
 }

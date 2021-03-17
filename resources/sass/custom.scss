@@ -2,7 +2,24 @@
 $fa-font-path: "../webfonts";
 
 
+// Manual Imports
+@import '~bootstrap/scss/bootstrap'; //npm i
+@import  '~admin-lte/dist/css/adminlte'; //npm i
+@import  '~@fortawesome/fontawesome-free/scss/fontawesome.scss'; //npm i
+@import  '~@fortawesome/fontawesome-free/scss/solid.scss'; //npm i
+@import  '~@fortawesome/fontawesome-free/scss/brands.scss'; //npm i
+
+
+
+
 .router-link-exact-active {
   color: Fuchsia!important;
   background-color: $pink;
+}
+
+
+
+/*Bootstrap v5 Modification*/
+.card-header {
+  
 }

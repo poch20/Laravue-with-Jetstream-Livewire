@@ -7,7 +7,8 @@
             <h3 class="card-title">Employee Records</h3>
             <div class="card-tools">
 
-              <button class="btn btn-success" @click="forCreateSharedReusableModalBoxVueMethod"><i class="fas fa-user-plus fa-fw"></i></button>
+
+              <button class="btn btn-success" @click="ifCreateButton"><i class="fas fa-user-plus fa-fw"></i></button>
 
 
             </div> <!-- card-tools -->
@@ -30,20 +31,21 @@
                   <td>{{ alias.id }}</td>
                   <td>{{ alias.name }}</td>
                   <td>{{ alias.email }}</td>
+                  <td> {{ $filters.globalVueFilterHelperMomentjs(alias.created_at) }} </td>
 
                   <td>
 
-                    <!--a href="#" @click="readAndPrintPDF(alias.id)">
+                    <a href="#">
                       <i class="fa fa-file-pdf-o"></i>
                     </a>
                     /
-                    <a href="#" @click="forUpdateSharedReusableModalBoxVueMethod(alias)">
+                    <a href="#" @click="ifEditButton(alias)">
                       <i class="fa fa-edit blue"></i>
                     </a>
                     /
                     <a href="#" @click="deleteUser(alias.id)">
                       <i class="fa fa-trash red"></i>
-                    </a-->
+                    </a>
                   </td>
                 </tr>
               </tbody>
@@ -65,23 +67,24 @@
 
 
         <!-- Twitter Boostrap Modal -->
-        <div class="modal fade" id="editUserOpenModalBoxContent" tabindex="-1" role="dialog" aria-labelledby="updateUserLabelIdTag" aria-hidden="true">
+        <div class="modal fade" id="v5-0-0-beta2-Modal" tabindex="-1" role="dialog" aria-labelledby="bs5-ariaLabelledById" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="updateUserLabelIdTag">Create</h5>
-                <h5 class="modal-title" id="updateUserLabelIdTag">Update User's Info</h5>
+                <h5 class="modal-title" v-show="!editMode" id="bs5-ariaLabelledById">Create</h5>
+                <h5 class="modal-title" v-show="editMode" id="bs5-ariaLabelledById">Update User's Info</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
 
-              <form @submit.prevent="createUser"
+              <form @submit.prevent="editMode ? putPayloads() : postPayloads()"
               action='/api/user' enctype="multipart/form-data" method="post"
               >
                 <div class="modal-body">
                   <div class="form-group">
-                    <input v-model="userForm.name" type="text" name="name" placeholder="Name" class="form-control"
+                    <label for="idAttr--name" class="col-form-label">Name:</label>
+                    <input id="idAttr--name" v-model="userForm.name" type="text" name="name" placeholder="Name" class="form-control"
                     :class="{ 'is-invalid': userForm.errors.has('name') }"
                   />
                     <has-error :form="userForm" field="name"></has-error>
@@ -114,11 +117,12 @@
                     <has-error :form="userForm" field="password"></has-error>
                   </div>
 
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success">Update</button>
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button v-show="editMode" type="submit" class="btn btn-success">Update</button>
+                    <button v-show="!editMode" type="submit" class="btn btn-primary">Create</button>
                 </div>
               </form> <!-- End of Form -->
 
@@ -150,16 +154,18 @@
 </template>
 
 <script scoped>
-import Profile from './Profile.vue'
 export default {
 
   components: {
 
   },
 
+  props: ['title'],
+
 
   data() {
     return {
+      editMode: false,
       seenData: {},
 
       userForm: new Spanish({
@@ -183,8 +189,54 @@ export default {
     },
 
 
-    createUser(){
-      this.userForm.post('api/user');
+
+    putPayloads(id){
+
+      this.$Progress.start()
+
+      Swal.fire({
+        title: 'Update User Data Information?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Update NOW!'
+      }).then( (result) => {
+
+        console.log('down result output');
+        console.log(result)
+
+        if(result.value){
+
+
+          this.userForm.put('api/user/'+this.userForm.id).then( () => {
+            $('#v5-0-0-beta2-Modal').modal('hide')
+            Swal.fire(
+              'Good job!',
+              'User Information Has Been Updated',
+              'success'
+            )
+            CustomEventHandler.emit('After Post Method', this.loadUserModel());
+            this.$Progress.finish()
+
+
+          })
+          .catch( () => {
+
+            Swal.fire("Failed!", "There was something wrong.", "warning")
+            this.$Progress.fail()
+
+          })
+
+        }
+
+      })
+
+
+
+      .catch( () => {})
+
+
     },
 
 
@@ -195,11 +247,96 @@ export default {
 
 
 
-    forCreateSharedReusableModalBoxVueMethod () {
-      // this.editMode = false
-      // this.userForm.reset()
-      $('#editUserOpenModalBoxContent').modal('show')
+
+
+    postPayloads(){
+      this.$Progress.start();
+      this.userForm.post('api/user')
+      .then( () => {
+
+        /******************************************https://github.com/scottcorgan/tiny-emitter****************/
+        CustomEventHandler.emit('After Post Method', this.loadUserModel());
+        /******************************************https://github.com/scottcorgan/tiny-emitter****************/
+
+        $('#v5-0-0-beta2-Modal').modal('hide')
+
+        // https://sweetalert2.github.io/ Functionality Library
+        Toast.fire({
+          icon: 'success',
+          title: 'User created successfully'
+        })
+        // https://sweetalert2.github.io/ Functionality Library
+
+        this.$Progress.finish();
+
+      })
+      .catch( () => {} )
+
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    deleteUser(id){
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        //send request to the server
+        if(result.value){
+          this.userForm.delete('api/user/'+id).then(() => {
+            Swal.fire(
+              'Deleted!',
+              'Your file has been deleted.',
+              'success'
+            )
+            CustomEventHandler.emit('After Post Method', this.loadUserModel());
+          }).catch(() => {
+            Swal.fire("Failed!", "There was something wrong.", "warning")
+          })
+        }
+      })
+    },
+
+
+
+
+
+
+/*******************Conditional Button Clicks*******************/
+    ifEditButton(user) {
+      console.log(user);
+      this.editMode = true
+      this.userForm.reset()
+      this.userForm.fill(user);
+      $('#v5-0-0-beta2-Modal').modal('show')
+    },
+
+
+    ifCreateButton () {
+      this.editMode = false
+      this.userForm.reset()
+      $('#v5-0-0-beta2-Modal').modal('show')
     }
+/*******************Conditional Button Clicks*******************/
+
   },// End of Methods
 
 
@@ -210,6 +347,19 @@ export default {
 
   created() {
     this.loadUserModel()
+    CustomEventHandler.on('After Post Method', function (nakaCallNa) {
+    });/******************************************https://github.com/scottcorgan/tiny-emitter****************/
+
+    CustomEventHandler.on('Search Implementation', (goUpTheScopeChainToFindClosure) => {
+      let theThisKW = goUpTheScopeChainToFindClosure()
+      let query = theThisKW.vmAttr__InpTS_IndexBladeSearch
+      //let query = this.$parent.searchVue
+
+      axios.get('api/search-users-on-admin-area?anyVar=' + query)
+      .then( (data) => {this.seenData = data.data} )
+      .catch( () => {})
+
+    })
   },
 
   mounted() {

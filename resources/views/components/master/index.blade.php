@@ -14,26 +14,34 @@
 <body class="hold-transition sidebar-mini">
 <div class="wrapper" id="laravue-app">
 
+
   <!-- Navbar -->
-  @include('layouts\livuewire\pages\nav')
+  @include('assets\livuewire\pages\nav')
   <!-- /.navbar -->
 
 
-  @include('layouts\livuewire\pages\tools')
+  @include('assets\livuewire\pages\tools')
 
 
   <!-- Content Wrapper. Contains page content -->
+  @php
+  $AuthUser = Auth::user();
+  @endphp
   <div class="content-wrapper">
+    
     <router-view></router-view>
+    <!-- https://www.npmjs.com/package/@aacassandra/vue3-progressbar -->
+    <vue-progress-bar />
+    <!-- https://www.npmjs.com/package/@aacassandra/vue3-progressbar -->
   </div>
   <!-- /.content-wrapper -->
 
 
-  @include('layouts\livuewire\pages\sidebar_pane')
+  @include('assets\livuewire\pages\sidebar_pane')
 
 
 
-  @include('layouts\livuewire\pages\footer')
+  @include('assets\livuewire\pages\footer')
 </div>
 <!-- ./wrapper -->
 

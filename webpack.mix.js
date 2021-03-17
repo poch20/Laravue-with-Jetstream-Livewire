@@ -13,7 +13,9 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
    .js('resources/js/lib.js', 'public/js').vue()
+   .js('resources/js/Playground/VueMastery/Vue.js', 'public/js').vue()
    .sass('resources/sass/custom.scss', 'public/css')
+   .sass('resources/sass/Playground/VueMastery/vue-dynamic-mastery.scss', 'public/css')
     .postCss('resources/css/app.css', 'public/css', [
         require('postcss-import'),
         require('tailwindcss'),
